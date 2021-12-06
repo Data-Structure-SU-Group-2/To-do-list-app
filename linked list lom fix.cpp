@@ -42,13 +42,17 @@ void displayList (struct list_todo* list){
     cout<<"\n";
 }
 
-void displayStackList (stack <list_todo*> stacks){
+void displayStackList (stack <struct list_todo*> stacks){
     while(!stacks.empty()){
         int i = 1;
-        printf("%c %.2d-%.2d-%d\n",(char)254, stacks.top()->list_day,stacks.top()->list_month,stacks.top()->list_year);
-        cout << i <<") "<< stacks.top()->list_title;
-        printf(" (%.2d:%.2d)\n", stacks.top()->list_hour, stacks.top()->list_minute);
-        cout<<"Description: "<< stacks.top()->list_desc<<endl;
+        while(stacks.top()!=NULL){
+            printf("%c %.2d-%.2d-%d\n",(char)254, stacks.top()->list_day,stacks.top()->list_month,stacks.top()->list_year);
+            cout << i <<") "<< stacks.top()->list_title;
+            printf(" (%.2d:%.2d)\n", stacks.top()->list_hour, stacks.top()->list_minute);
+            cout<<"Description: "<< stacks.top()->list_desc<<endl;
+            stacks.top() = stacks.top()->next;
+            i++;
+        }
         stacks.pop();
         cout<<"\n";
     }
@@ -59,7 +63,7 @@ int main()
     int day,month,year,hour,minute;
     string title, desc;
     list_todo *new_node = NULL;
-    stack <list_todo*> stack;
+    stack <struct list_todo*> stack;
     
     cout<<"Title: ";
     getline(cin,title);
@@ -76,13 +80,10 @@ int main()
     cout<<"\n";
 
     insertList(&new_node, day, month, year, hour, minute, title, desc);
-    stack.push(new_node);
-
-    //ntar pake loop function biar bisa multiple input
-    //ini nyoba" aja biar linkedlist ama stacknya rame
     insertList(&new_node, 12, 12, 2002, 9, 30, "apa", "aaa");
-    stack.push(new_node);
 
+    stack.push(new_node);
+    displayList(new_node);
     displayStackList(stack);
     
     //pake ini kalo mau liat berhasil ga bikin delete function
