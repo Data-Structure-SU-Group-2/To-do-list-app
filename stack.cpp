@@ -104,31 +104,40 @@ void sortlist(struct list_todo *unsorted_node){
 
 int main()
 {
-    int day,month,year,hour,minute;
-    string title, desc;
+    int day,month,year,hour,minute,num;
+    string title, desc, name;
     list_todo *new_node = NULL;
     stack <struct list_todo*> stack;
     
-    cout<<"Title: ";
-    getline(cin,title);
-
-    cout<<"Date (dd-mm-yyyy): ";
-    scanf("%d-%d-%d",&day, &month, &year);
+    cout<<"Welcome to My-ToDoList"<<"\n\n";
+    cout<<"What is your name? ";
+    cin>>name;
     
-    cout<<"Date (hh:mm): ";
-    scanf("%d:%d",&hour, &minute);
+    cout<<"Hi, "+name+"!"<<"\n\n";
 
-    cout<<"Description: ";
+    cout<<"How many notes do you want to make? ";
+    cin>>num;
     cin.ignore();
-    getline(cin,desc);
-    cout<<"\n";
+	    
+    for(int i=0; i<num; i++)
+	{
+	 	cout<<"Title: ";
+  	 	getline(cin,title);
 
-    insertList(&new_node, day, month, year, hour, minute, title, desc);
-    insertList(&new_node, 12, 12, 2002, 9, 30, "apa", "aaa");
-    insertList(&new_node, 12, 12, 2004, 9, 30, "apa", "aaa");
+ 	    cout<<"Date (dd-mm-yyyy): ";
+ 	    scanf("%d-%d-%d",&day, &month, &year);
+    
+   		cout<<"Date (hh:mm): ";
+ 	    scanf("%d:%d",&hour, &minute);
 
-    stack.push(new_node);
-    sortlist(new_node);
+  	    cout<<"Description: ";
+   	    cin.ignore();
+     	getline(cin,desc);
+     	cout<<"\n";
+
+  	    insertList(&new_node, day, month, year, hour, minute, title, desc);
+  	    stack.push(new_node);
+  	}
     displayList(new_node);
     //displayStackList(stack);    
     //pake ini kalo mau liat berhasil ga bikin delete function
