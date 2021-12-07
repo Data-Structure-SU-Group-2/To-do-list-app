@@ -58,6 +58,34 @@ void displayStackList (stack <struct list_todo*> stacks){
     }
 }
 
+void sortlist(struct list_todo *unsorted_node){
+    struct list_todo *current = unsorted_node, *index = NULL;
+    int temp_year, temp_month, temp_day, temp_hour, temp_minute;
+    string temp_title, temp_desc;
+
+    while(current!=NULL){
+        index = current->next;
+        while (index!=NULL){
+            if(current->list_year > index->list_year){
+                temp_year = current->list_year;
+                current->list_year = index->list_year;
+                index->list_year = temp_year;
+
+                temp_month = current->list_month;
+                current->list_month = index->list_month;
+                index->list_month = temp_month;
+
+                temp_day = current->list_day;
+                current->list_day = index->list_day;
+                index->list_day = temp_day;
+            }
+
+            index = index->next;
+        }
+        current = current->next;
+    }
+}
+
 int main()
 {
     int day,month,year,hour,minute;
@@ -81,11 +109,11 @@ int main()
 
     insertList(&new_node, day, month, year, hour, minute, title, desc);
     insertList(&new_node, 12, 12, 2002, 9, 30, "apa", "aaa");
+    insertList(&new_node, 12, 11, 2004, 9, 30, "apa", "aaa");
 
     stack.push(new_node);
-    displayList(new_node);
-    displayStackList(stack);
-    
+    sortlist(new_node);
+    displayStackList(stack);    
     //pake ini kalo mau liat berhasil ga bikin delete function
     //displayList(new_node);
 
