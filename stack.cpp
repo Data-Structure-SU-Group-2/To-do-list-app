@@ -99,6 +99,101 @@ void sortlist(struct list_todo *unsorted_node){
                 current->list_desc = index->list_desc;
                 index->list_desc = temp_desc;
             }
+            
+            else if(current->list_year == index->list_year && current->list_month > index->list_month){
+                
+
+                temp_month = current->list_month;
+                current->list_month = index->list_month;
+                index->list_month = temp_month;
+
+                temp_day = current->list_day;
+                current->list_day = index->list_day;
+                index->list_day = temp_day;
+                
+                temp_hour = current->list_hour;
+                current->list_hour = index->list_hour;
+                index->list_minute = temp_hour;
+                
+                temp_minute = current->list_minute;
+                current->list_minute = index->list_minute;
+                index->list_minute = temp_minute;
+                
+                temp_title = current->list_title;
+                current->list_title = index->list_title;
+                index->list_title = temp_title;
+                
+                temp_desc = current->list_desc;
+                current->list_desc = index->list_desc;
+                index->list_desc = temp_desc;
+                
+            }
+            
+            else if(current->list_year == index->list_year && current->list_month == index->list_month && current->list_day > index->list_day){
+                
+
+                temp_day = current->list_day;
+                current->list_day = index->list_day;
+                index->list_day = temp_day;
+                
+                temp_hour = current->list_hour;
+                current->list_hour = index->list_hour;
+                index->list_minute = temp_hour;
+                
+                temp_minute = current->list_minute;
+                current->list_minute = index->list_minute;
+                index->list_minute = temp_minute;
+                
+                temp_title = current->list_title;
+                current->list_title = index->list_title;
+                index->list_title = temp_title;
+                
+                temp_desc = current->list_desc;
+                current->list_desc = index->list_desc;
+                index->list_desc = temp_desc;
+                
+            }
+            
+            else if(current->list_year == index->list_year && current->list_month == index->list_month && current->list_day == index->list_day && current->list_hour > index->list_hour){
+               
+                
+                temp_hour = current->list_hour;
+                current->list_hour = index->list_hour;
+                index->list_minute = temp_hour;
+                
+                temp_minute = current->list_minute;
+                current->list_minute = index->list_minute;
+                index->list_minute = temp_minute;
+                
+                temp_title = current->list_title;
+                current->list_title = index->list_title;
+                index->list_title = temp_title;
+                
+                temp_desc = current->list_desc;
+                current->list_desc = index->list_desc;
+                index->list_desc = temp_desc;
+                
+            }
+            
+            else if(current->list_year == index->list_year && current->list_month == index->list_month && current->list_day == index->list_day && current->list_hour == index->list_hour && current->list_minute > index->list_minute){
+                
+                
+                temp_minute = current->list_minute;
+                current->list_minute = index->list_minute;
+                index->list_minute = temp_minute;
+                
+                temp_title = current->list_title;
+                current->list_title = index->list_title;
+                index->list_title = temp_title;
+                
+                temp_desc = current->list_desc;
+                current->list_desc = index->list_desc;
+                index->list_desc = temp_desc;
+                
+            }
+            
+            
+            
 
             index = index->next;
         }
@@ -141,7 +236,7 @@ int main()
 	
 	while(menu!=0){
 		if(menu==1){
-			displayStackList(stack);
+			displayList(new_node);
 		}
 		else if(menu==2){
 			cout<<"How many notes do you want to make? ";
@@ -165,6 +260,7 @@ int main()
 		     	cout<<"\n";
 		
 		  	    insertList(&new_node, day, month, year, hour, minute, title, desc);
+		  	    sortlist(new_node);
 		  	    stack.push(new_node);
 		  	    
 		  	    
