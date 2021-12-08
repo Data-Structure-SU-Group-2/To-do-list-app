@@ -238,7 +238,7 @@ void displayStackList (stack <struct ProgressiveList> stacks){
 
 int main()
 {
-    int day,month,year,hour,minute,num,menu;
+    int day,month,year,hour,minute,num,menu,delnumtd,delnumpg;
     char submenu, again;
     string title, desc, name;
     list_todo *new_node = NULL;
@@ -265,7 +265,9 @@ int main()
 	
 	cout<<"[1] Show my lists"<<endl;
 	cout<<"[2] Create new todo-list"<<endl;
-    cout<<"[4] Create progressive list"<<endl;
+    cout<<"[3] Create progressive list"<<endl;
+    cout<<"[4] Delete todo-list"<<endl;
+    cout<<"[5] Delete progressive-list"<<endl;
 	cout<<"[0] Exit"<<endl;
 	cout<<"Enter Command: ";
 	cin>>menu;
@@ -345,10 +347,30 @@ int main()
 
             displayStackList(restacks);  
         }
+        
+        else if(menu == 4 ){
+        	
+        	list.displayList(new_node);
+        	cout<< "Enter which number you want to delete :";
+        	cin>>delnumtd;
+        	list.deleteList(&new_node,delnumtd);
+        	list.displayList(new_node);
+			
+		}
+		
+	else if(menu == 5 ){
+        	
+			//stacks.pop();        	
+        	restacks.pop();
+        	displayStackList(restacks);
+			
+		}
     
     cout<<"[1] Show my list"<<endl;
 	cout<<"[2] Create new todo-list"<<endl;
     cout<<"[3] Create Progressive List"<<endl;
+    cout<<"[4] Delete todo-list"<<endl;
+    cout<<"[5] Delete progressive-list"<<endl;
 	cout<<"[0] Exit"<<endl;
 	cout<<"Enter Command: ";
 	cin>>menu;
