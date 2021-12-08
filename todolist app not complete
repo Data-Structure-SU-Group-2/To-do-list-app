@@ -72,6 +72,11 @@ void List::deleteList(struct list_todo **headRef, int position){
 
 void List::displayList (struct list_todo* list){
     int i = 1;
+
+    if(list == NULL){
+       cout<<"There is nothing here! Plan something!"<<endl; 
+    }
+
     while(list!=NULL){
         printf("%d) %.2d-%.2d-%d\n",i, list->list_day,list->list_month,list->list_year);
         cout<<list->list_title;
@@ -288,7 +293,7 @@ int main()
             if (submenu == 'a') {
                 list.displayList(new_node);}
             else if (submenu == 'b') {
-                displayStackList(stacks);
+                displayStackList(restacks);
             }
 		}
 		else if(menu == 2){
@@ -345,7 +350,6 @@ int main()
                 stacks.pop();
             }
 
-            displayStackList(restacks);  
         }
         
         else if(menu == 4 ){
@@ -359,8 +363,7 @@ int main()
 		}
 		
 	else if(menu == 5 ){
-        	
-			//stacks.pop();        	
+        	       	
         	restacks.pop();
         	displayStackList(restacks);
 			
@@ -376,6 +379,8 @@ int main()
 	cin>>menu;
 	cout<<"\n\n";
 	}
+   
+    cout<<"Thank you for using our program!";
 
     return 0;
 }
