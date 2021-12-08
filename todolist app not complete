@@ -18,9 +18,25 @@ struct list_todo
     struct list_todo *next;
 };
 
-void insertList (struct list_todo** headRef, int day, int month, int year, int hour, int minute, string title, string desc){
+struct ProgressiveList
+{
+    string progress_title;
+    string progress_desc;
+};
+
+class List{
+    public:
+        void insertList (struct list_todo** headRef, int day, int month, int year, int hour, int minute, string title, string desc);
+        void displayList (struct list_todo* list);
+        void sortlist(struct list_todo *unsorted_node);
+        void deleteList(struct list_todo ** headRef, int position);
+
+};
+
+void List:: insertList (struct list_todo** headRef, int day, int month, int year, int hour, int minute, string title, string desc){
     list_todo* new_list = new list_todo();
     new_list->list_title = title;
+    
     new_list->list_day = day;
     new_list->list_month = month;
     new_list->list_year = year;
@@ -31,38 +47,44 @@ void insertList (struct list_todo** headRef, int day, int month, int year, int h
     (*headRef) = new_list;    
 }
 
-void displayList (struct list_todo* list){
+void List::deleteList(struct list_todo **headRef, int position){
+    if (*headRef == NULL){
+        return;
+    }
+
+    struct list_todo *temp = *headRef;
+    if (position == 1){
+        *headRef = temp->next;
+        free(temp);
+        return;
+    }
+    for (int i = 2; temp!= NULL && i<position-1; i++){
+        temp = temp->next;
+    }
+    if (temp == NULL || temp->next == NULL){
+        return;
+    }
+    struct list_todo *next = temp->next->next;
+    free(temp->next);
+    temp->next = next;
+}
+
+
+void List::displayList (struct list_todo* list){
+    int i = 1;
     while(list!=NULL){
-        printf("%.2d-%.2d-%d\n", list->list_day,list->list_month,list->list_year);
+        printf("%d) %.2d-%.2d-%d\n",i, list->list_day,list->list_month,list->list_year);
         cout<<list->list_title;
         printf(" (%.2d:%.2d)\n", list->list_hour, list->list_minute);
         cout<<list->list_desc<<endl;
         list = list->next;
         cout<<"\n";
+        i++;
     }
     cout<<"\n";
 }
 
-void displayStackList (stack <struct list_todo*> stacks){
-	if(stacks.empty()){
-		cout<<"There is nothing here! Plan something!"<<endl;
-	}
-    while(!stacks.empty()){
-        int i = 1;
-        while(stacks.top()!=NULL){
-            printf("%c %.2d-%.2d-%d\n",(char)254, stacks.top()->list_day,stacks.top()->list_month,stacks.top()->list_year);
-            cout << i <<") "<< stacks.top()->list_title;
-            printf(" (%.2d:%.2d)\n", stacks.top()->list_hour, stacks.top()->list_minute);
-            cout<<"Description: "<< stacks.top()->list_desc<<endl;
-            stacks.top() = stacks.top()->next;
-            i++;
-        }
-        stacks.pop();
-        cout<<"\n";
-    }
-}
-
-void sortlist(struct list_todo *unsorted_node){
+void List::sortlist(struct list_todo *unsorted_node){
     struct list_todo *current = unsorted_node, *index = NULL;
     int temp_year, temp_month, temp_day, temp_hour, temp_minute;
     string temp_title, temp_desc;
@@ -188,12 +210,9 @@ void sortlist(struct list_todo *unsorted_node){
                 
                 temp_desc = current->list_desc;
                 current->list_desc = index->list_desc;
-                index->list_desc = temp_desc;
-                
+                index->list_desc = temp_desc;                
+            
             }
-            
-            
-            
 
             index = index->next;
         }
@@ -201,16 +220,38 @@ void sortlist(struct list_todo *unsorted_node){
     }
 }
 
+void displayStackList (stack <struct ProgressiveList> stacks){
+	if(stacks.empty()){
+		cout<<"There is nothing here! Plan something!"<<endl;
+	}
+    int i = 1;
+    while(!stacks.empty()){
+        cout << i <<"] "<< stacks.top().progress_title <<endl;
+        cout<<"Description: "<< stacks.top().progress_desc<<endl;
+        i++;
+        stacks.pop();
+        cout<<"\n";
+    }
+}
+
+
+
 int main()
 {
     int day,month,year,hour,minute,num,menu;
+    char submenu, again;
     string title, desc, name;
     list_todo *new_node = NULL;
-    stack <struct list_todo*> stack;
+
+    stack <ProgressiveList> stacks;
+    stack <ProgressiveList> restacks;
+    ProgressiveList progressivelist;
+
+    List list; 
+
     char currDate[30];
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    
     
     cout<<"Welcome to My-ToDoList"<<"\n\n";
     cout<<"What is your name? ";
@@ -222,8 +263,9 @@ int main()
 	
 	cout<<"Here are the instructions to use this app:\n"<<endl;
 	
-	cout<<"[1] Show my todo-list"<<endl;
+	cout<<"[1] Show my lists"<<endl;
 	cout<<"[2] Create new todo-list"<<endl;
+    cout<<"[4] Create progressive list"<<endl;
 	cout<<"[0] Exit"<<endl;
 	cout<<"Enter Command: ";
 	cin>>menu;
@@ -236,9 +278,18 @@ int main()
 	
 	while(menu!=0){
 		if(menu==1){
-			displayList(new_node);
+            cout<<"a) Show your to do list"<<endl;
+            cout<<"b) Show your progressive list"<<endl;
+            cout<<"Enter Command: ";
+            cin>>submenu;
+            cout<<endl;
+            if (submenu == 'a') {
+                list.displayList(new_node);}
+            else if (submenu == 'b') {
+                displayStackList(stacks);
+            }
 		}
-		else if(menu==2){
+		else if(menu == 2){
 			cout<<"How many notes do you want to make? ";
 	  	    cin>>num;
 	    	cin.ignore();
@@ -259,24 +310,50 @@ int main()
 		     	getline(cin,desc);
 		     	cout<<"\n";
 		
-		  	    insertList(&new_node, day, month, year, hour, minute, title, desc);
-		  	    sortlist(new_node);
-		  	    stack.push(new_node);
-		  	    
-		  	    
+		  	    list.insertList(&new_node, day, month, year, hour, minute, title, desc);
+		  	    list.sortlist(new_node);
 	  		}
+            
+            
 		}
+
+        else if(menu == 3){
+            cout<<"Progressive's list: "<<endl;
+            int j = 1;
+            do{
+                cout<<j<<"] Title: ";
+                cin.ignore();
+                getline(cin,title);
+                cout<<"Description: ";
+                getline(cin,desc);
+                cout<<"\n";
+
+                progressivelist.progress_title = title;
+                progressivelist.progress_desc = desc;
+
+                stacks.push(progressivelist);
+                cout<<"Again (y/n)?";
+                cin>>again;
+                j++;
+
+            }while(again!='n');
+            
+            while(!stacks.empty()){
+                restacks.push(stacks.top());
+                stacks.pop();
+            }
+
+            displayStackList(restacks);  
+        }
     
-    cout<<"[1] Show my todo-list"<<endl;
+    cout<<"[1] Show my list"<<endl;
 	cout<<"[2] Create new todo-list"<<endl;
+    cout<<"[3] Create Progressive List"<<endl;
 	cout<<"[0] Exit"<<endl;
 	cout<<"Enter Command: ";
 	cin>>menu;
 	cout<<"\n\n";
 	}
-    //displayStackList(stack);    
-    //pake ini kalo mau liat berhasil ga bikin delete function
-    //displayList(new_node);
 
     return 0;
 }
